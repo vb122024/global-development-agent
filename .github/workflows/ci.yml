@@ -16,7 +16,7 @@ jobs:
       - run: backend/.venv/bin/pip install -e 'backend[dev]'
       - run: backend/.venv/bin/python scripts/bootstrap_data.py
       - run: backend/.venv/bin/python -m pytest -q backend/tests
-      - run: backend/.venv/bin/python evals/run_offline.py
+      - run: backend/.venv/bin/python evals/run_checks.py
 
   frontend:
     runs-on: ubuntu-latest
