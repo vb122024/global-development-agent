@@ -1,0 +1,39 @@
+{
+  "fixture_status": "reviewed demonstration snapshot",
+  "source_id": "WB-WDI",
+  "source_url": "https://api.worldbank.org/v2/",
+  "retrieved_at": "2026-09-12",
+  "countries": [
+    {"iso3":"CHN","name":"China","region":"East Asia & Pacific","income_group":"Upper middle income"},
+    {"iso3":"IND","name":"India","region":"South Asia","income_group":"Lower middle income"},
+    {"iso3":"IDN","name":"Indonesia","region":"East Asia & Pacific","income_group":"Upper middle income"},
+    {"iso3":"VNM","name":"Vietnam","region":"East Asia & Pacific","income_group":"Lower middle income"},
+    {"iso3":"BRA","name":"Brazil","region":"Latin America & Caribbean","income_group":"Upper middle income"},
+    {"iso3":"MEX","name":"Mexico","region":"Latin America & Caribbean","income_group":"Upper middle income"},
+    {"iso3":"ZAF","name":"South Africa","region":"Sub-Saharan Africa","income_group":"Upper middle income"},
+    {"iso3":"NGA","name":"Nigeria","region":"Sub-Saharan Africa","income_group":"Lower middle income"},
+    {"iso3":"BGD","name":"Bangladesh","region":"South Asia","income_group":"Lower middle income"},
+    {"iso3":"PHL","name":"Philippines","region":"East Asia & Pacific","income_group":"Lower middle income"},
+    {"iso3":"USA","name":"United States","region":"North America","income_group":"High income"},
+    {"iso3":"GBR","name":"United Kingdom","region":"Europe & Central Asia","income_group":"High income"},
+    {"iso3":"DEU","name":"Germany","region":"Europe & Central Asia","income_group":"High income"},
+    {"iso3":"JPN","name":"Japan","region":"East Asia & Pacific","income_group":"High income"},
+    {"iso3":"FRA","name":"France","region":"Europe & Central Asia","income_group":"High income"},
+    {"iso3":"CAN","name":"Canada","region":"North America","income_group":"High income"},
+    {"iso3":"AUS","name":"Australia","region":"East Asia & Pacific","income_group":"High income"}
+  ],
+  "indicators": [
+    {"indicator_id":"NY.GDP.MKTP.CD","name":"GDP (current US$)","unit":"current US$","definition":"Gross domestic product at purchaser's prices in current U.S. dollars."},
+    {"indicator_id":"NY.GDP.MKTP.KD.ZG","name":"GDP growth (annual %)","unit":"annual %","definition":"Annual percentage growth rate of GDP at market prices based on constant local currency."}
+  ],
+  "observations": [
+    ["IND","NY.GDP.MKTP.CD",2019,2835606256558.19],["IND","NY.GDP.MKTP.CD",2020,2674851578587.27],["IND","NY.GDP.MKTP.CD",2021,3167270623260.47],["IND","NY.GDP.MKTP.CD",2022,3249938492013.47],["IND","NY.GDP.MKTP.CD",2023,3500906030644.76],
+    ["CHN","NY.GDP.MKTP.CD",2019,14560167101283.4],["CHN","NY.GDP.MKTP.CD",2020,14996414166715.1],["CHN","NY.GDP.MKTP.CD",2021,18201698719564],["CHN","NY.GDP.MKTP.CD",2022,18316765021690.2],["CHN","NY.GDP.MKTP.CD",2023,18270356654533.2],
+    ["VNM","NY.GDP.MKTP.CD",2019,334365270496.667],["VNM","NY.GDP.MKTP.CD",2020,346615738537.796],["VNM","NY.GDP.MKTP.CD",2021,366474752771.009],["VNM","NY.GDP.MKTP.CD",2022,413445230668.578],["VNM","NY.GDP.MKTP.CD",2023,433805036898.465],
+    ["IDN","NY.GDP.MKTP.CD",2019,1119099871350.2],["IDN","NY.GDP.MKTP.CD",2020,1059054842698.48],["IDN","NY.GDP.MKTP.CD",2021,1186509691086.73],["IDN","NY.GDP.MKTP.CD",2022,1319101183380.15],["IDN","NY.GDP.MKTP.CD",2023,1371166925749.88],
+    ["IND","NY.GDP.MKTP.KD.ZG",2019,3.87143694070524],["IND","NY.GDP.MKTP.KD.ZG",2020,-5.77772470687303],["IND","NY.GDP.MKTP.KD.ZG",2021,9.68959249191741],["IND","NY.GDP.MKTP.KD.ZG",2022,7.6093649776932],["IND","NY.GDP.MKTP.KD.ZG",2023,7.210224629335],
+    ["CHN","NY.GDP.MKTP.KD.ZG",2019,6.06737806333672],["CHN","NY.GDP.MKTP.KD.ZG",2020,2.33950385203023],["CHN","NY.GDP.MKTP.KD.ZG",2021,8.57038414981781],["CHN","NY.GDP.MKTP.KD.ZG",2022,3.13385438394069],["CHN","NY.GDP.MKTP.KD.ZG",2023,5.41600334492955],
+    ["VNM","NY.GDP.MKTP.KD.ZG",2019,7.35926270105006],["VNM","NY.GDP.MKTP.KD.ZG",2020,2.86541320912272],["VNM","NY.GDP.MKTP.KD.ZG",2021,2.55372852648131],["VNM","NY.GDP.MKTP.KD.ZG",2022,8.53750041218142],["VNM","NY.GDP.MKTP.KD.ZG",2023,4.97865959483225],
+    ["IDN","NY.GDP.MKTP.KD.ZG",2019,5.01928768046282],["IDN","NY.GDP.MKTP.KD.ZG",2020,-2.06551182934165],["IDN","NY.GDP.MKTP.KD.ZG",2021,3.70288562827751],["IDN","NY.GDP.MKTP.KD.ZG",2022,5.30719722664799],["IDN","NY.GDP.MKTP.KD.ZG",2023,5.04883117855516]
+  ]
+}

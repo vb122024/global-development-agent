@@ -1,0 +1,68 @@
+---
+config:
+  architecture:
+    nodeSeparation: 90
+    idealEdgeLengthMultiplier: 2
+    seed: 1
+---
+architecture-beta
+    %% Simple overview. Live AI runs locally; GitHub Pages uses static snapshots only.
+    %% Managed vector stores handle chunking and embeddings during document ingestion.
+    %% Backend owns credentials and enforces the chat switch; no browser API keys.
+    %% Evaluation, costs and sandbox details remain in the supporting architecture.
+
+    group WB(cloud)[World Bank sources]
+    group aiapp(server)[Local application]
+    group openai(cloud)[OpenAI Platform]
+    group site(internet)[GitHub Pages]
+
+    service currentgdp(database)[Current GDP] in WB
+    service gdpgrowthrate(database)[GDP growth rate] in WB
+    service countrymetadata(database)[Country details] in WB
+    service economicupdate(disk)[Economic updates] in WB
+
+    service duckDB01_structure(database)[Structured DuckDB] in aiapp
+    service telemetry(database)[Telemetry, evaluations and follow-up memory] in aiapp
+    service document(disk)[Reports and evidence] in aiapp
+    service backend(server)[Python Agents SDK backend] in aiapp
+    service frontend(internet)[JavaScript UI and chat] in aiapp
+    service evaluationui(internet)[Developer Evaluation Lab] in aiapp
+
+    service vectorstore(database)[Vector store and embeddings] in openai
+    service openai_llm_model(cloud)[OpenAI models] in openai
+
+    service snapshots(disk)[Static data exports] in site
+    service staticui(internet)[Dashboard with chat disabled] in site
+
+    %% World Bank ingestion into the structured DuckDB database.
+    currentgdp:B --> T:duckDB01_structure
+    gdpgrowthrate:B --> T:duckDB01_structure
+    countrymetadata:B --> T:duckDB01_structure
+    economicupdate:B --> T:document
+    document:B --> T:vectorstore
+
+    %% Local retrieval and generation through the Python backend.
+    duckDB01_structure:B --> T:backend
+    %% Stores three compact, expiring follow-up summaries per local browser session.
+    telemetry:B --> T:backend
+    backend:R <--> L:vectorstore
+    backend:R <--> L:openai_llm_model
+    frontend:T <--> B:backend
+    evaluationui:T <--> B:backend
+
+    %% Build-time exports feed the public dashboard; no live backend or model link.
+    %% Exports include reviewed structured data and source metadata.
+    %% The static dashboard queries Parquet with DuckDB Wasm, with a JSON fallback.
+    duckDB01_structure:B --> T:snapshots
+    snapshots:B --> T:staticui
+
+    %% Fixed grid: sources, preparation, storage, services, user interfaces.
+    %% OpenAI stays on the right and the static publishing branch on the left.
+    align row currentgdp gdpgrowthrate countrymetadata economicupdate
+    align row duckDB01_structure telemetry document vectorstore
+    align row snapshots backend openai_llm_model
+    align row staticui frontend evaluationui
+
+    align column currentgdp duckDB01_structure snapshots staticui
+    align column countrymetadata duckDB01_structure backend frontend
+    align column economicupdate document vectorstore openai_llm_model

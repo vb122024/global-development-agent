@@ -1,0 +1,37 @@
+# Local Python/JavaScript environments and package caches
+backend/.venv/
+backend/.uv-cache/
+.test-runtime/
+.eval-runtime/
+frontend/node_modules/
+evaluation-ui/node_modules/
+.npm/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Credentials and local runtime data. Keep only the deliberately empty examples.
+.env
+.env.local
+*.env
+*.env.*
+!.env.example
+!backend/.env.example
+backend/.env.local
+data/runtime/
+data/source_documents/
+artifacts/
+logs/
+*.log
+*.duckdb
+*.sqlite
+*.sqlite3
+
+# Generated frontend and Python files
+__pycache__/
+*.pyc
+frontend/dist/
+evaluation-ui/dist/
+.DS_Store

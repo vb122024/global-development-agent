@@ -1,0 +1,8 @@
+{
+  "note": "Validate model availability and current prices when paid access is activated.",
+  "router_extractor": "gpt-5-nano",
+  "research_synthesis": "gpt-5-mini",
+  "judge": "gpt-5-nano",
+  "embedding_mode": "openai_managed_vector_store",
+  "embedding_model": null
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChatResponse",
+  "type": "object",
+  "required": ["run_id", "status", "answer", "citations", "limitations"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "status": {"enum": ["completed", "partial", "refused", "failed"]},
+    "answer": {"type": "string"},
+    "citations": {"type": "array"},
+    "model": {"type": ["string", "null"]},
+    "estimated_cost_usd": {"type": ["number", "null"]},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}
