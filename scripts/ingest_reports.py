@@ -65,7 +65,7 @@ def prepare() -> None:
                 raise ValueError(f"Existing file is not a PDF: {path}")
             print(f"Ready: {row['slug']} ({path.stat().st_size:,} bytes)")
             continue
-        request = Request(row["url"], headers={"User-Agent": "GlobalDevelopmentPortfolio/0.1 (educational corpus)"})
+        request = Request(row["url"], headers={"User-Agent": "GlobalDevelopmentPortfolio/0.1 (experimental corpus)"})
         with urlopen(request, timeout=30) as response:
             if urlparse(response.url).hostname not in ALLOWED_HOSTS:
                 raise ValueError("Report redirected to an unreviewed host")

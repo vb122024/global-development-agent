@@ -27,6 +27,6 @@ Political maps of India use Survey of India published maps or digital boundary d
 - Government geospatial guidance: https://geospatial.dst.gov.in/Guidelines.aspx
 - Downloaded source archive: `frontend/public/maps/survey-of-india-outline.zip`
 
-Survey of India states that its outline vector may be used for individual, internal, educational, research, and website purposes and prohibits commercial use. This portfolio must retain Survey of India attribution and must not be represented as a commercially reusable map asset. Before any commercial use or redistribution outside this project, the owner must review the current terms directly with Survey of India.
+Survey of India lists individual, internal, research, and website use among the permitted purposes for its outline vector, and prohibits commercial use. This portfolio must retain Survey of India attribution and must not be represented as a commercially reusable map asset. Before any commercial use or redistribution outside this project, the owner must review the current terms directly with Survey of India.
 
 The rest of the world geometry is a separate map source. Rendering code must overlay the official Survey of India geometry for India rather than relying on the India outline in a generic world dataset.

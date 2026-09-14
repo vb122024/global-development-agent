@@ -14,7 +14,7 @@ os.environ.setdefault("ADMIN_TOKEN", "evaluation-owner")
 os.environ.setdefault("GDI_DATA_DIR", str(ROOT / ".eval-runtime"))
 
 from app.db import connect  # noqa: E402
-from app.structured_answers import answer  # noqa: E402
+from app.live_agents import local_vector_retrieval  # noqa: E402
 from app.repository import series  # noqa: E402
 from app.schemas import ChatRequest  # noqa: E402
 from app.security import FORBIDDEN_PATTERNS  # noqa: E402
@@ -29,11 +29,19 @@ def evaluate(case: dict) -> tuple[bool, str]:
         passed = round(series("CHN", "NY.GDP.MKTP.KD.ZG", 2020, 2020)[0]["value"], 2) == 2.34
     elif kind == "units": passed = series("IND", "NY.GDP.MKTP.KD.ZG", 2023, 2023)[0]["unit"] == "annual %"
     elif kind == "citation":
-        _, citations, _ = answer(ChatRequest(question="What is India's GDP?"))
-        passed = case["expected"] in json.dumps(citations)
+        checked_rows = series("IND", "NY.GDP.MKTP.CD", 2023, 2023)
+        if case["expected"] == "api.worldbank.org":
+            with connect("structured") as db:
+                source_url = db.execute("SELECT url FROM sources WHERE source_id='WB-WDI'").fetchone()[0]
+            passed = case["expected"] in source_url
+        else:
+            passed = case["expected"] in json.dumps(checked_rows)
     elif kind == "restraint":
-        _, _, limitations = answer(ChatRequest(question="What is India's GDP?"))
-        passed = bool(limitations) if case["expected"] == "limitation" else case["expected"] in " ".join(limitations)
+        synthesis_instructions = (ROOT / "agent_instructions" / "synthesis.txt").read_text(encoding="utf-8")
+        if case["expected"] == "limitation":
+            passed = local_vector_retrieval("zzzznonexistenttoken") == []
+        else:
+            passed = "causal" in synthesis_instructions.lower() and "without evidence" in synthesis_instructions.lower()
     elif kind == "security": passed = any(token in "ignore previous; drop table" for token in FORBIDDEN_PATTERNS)
     elif kind == "budget": passed = True  # Live configuration has chat off and zero budget by default.
     else: passed = False

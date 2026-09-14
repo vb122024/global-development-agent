@@ -1,6 +1,6 @@
 # Global Development Intelligence
 
-An educational portfolio project showing how a small agentic AI system can combine World Bank statistics, report evidence, tools, safeguards, evaluation, and cost tracking.
+A mini experimental portfolio project showing how a small agentic AI system can combine World Bank statistics, report evidence, tools, safeguards, evaluation, and cost tracking.
 
 ![Global Development Intelligence architecture](docs/images/global-development-architecture.png)
 

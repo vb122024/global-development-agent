@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.repository import series
 from app.settings import settings
+from app.state import runtime_state
 
 client = TestClient(app)
 
@@ -54,49 +55,44 @@ def test_complex_research_requires_live_configuration():
     assert "disabled" in response.json()["detail"]
 
 
-def test_greeting_is_answered_without_a_model_or_data_lookup():
+def test_casual_chat_requires_live_configuration():
     response = client.post("/api/chat", json={"question": "hi", "countries": ["IND"]}, headers=headers(True))
+    assert response.status_code == 503
+    assert "disabled" in response.json()["detail"]
+
+
+def test_casual_chat_uses_one_low_cost_model_turn(monkeypatch):
+    async def fake_casual(question):
+        assert question == "नमस्ते"
+        return "नमस्ते!", "gpt-5-nano", {"input_tokens": 4, "cached_tokens": 0, "output_tokens": 3}, 0.000001
+
+    monkeypatch.setattr("app.main.run_casual_chat", fake_casual)
+    runtime_state.set_chat_enabled(True)
+    try:
+        response = client.post("/api/chat", json={"question": "नमस्ते", "countries": ["IND"]}, headers=headers(True))
+    finally:
+        runtime_state.set_chat_enabled(False)
     assert response.status_code == 200
     body = response.json()
-    assert body["model"] is None
-    assert "Hello" in body["answer"]
+    assert body["model"] == "gpt-5-nano"
     assert body["handoffs"] == []
+    assert "Quick low-cost" in body["limitations"][0]
 
 
-def test_multilingual_greeting_is_answered_without_specialist_handoffs():
-    response = client.post("/api/chat", json={"question": "नमस्ते", "countries": ["IND"]}, headers=headers(True))
+def test_gdp_question_uses_full_live_research_flow(monkeypatch):
+    async def fake_live(question, memory_context):
+        assert question == "What is India's GDP?"
+        return "India GDP result", "gpt-5-nano", {"input_tokens": 7, "cached_tokens": 0, "output_tokens": 5}, 0.000002
+
+    monkeypatch.setattr("app.main.run_live", fake_live)
+    runtime_state.set_chat_enabled(True)
+    try:
+        response = client.post("/api/chat", json={"question": "What is India's GDP?", "countries": ["IND"], "mode": "live"}, headers=headers(True))
+    finally:
+        runtime_state.set_chat_enabled(False)
     assert response.status_code == 200
-    body = response.json()
-    assert body["model"] is None
-    assert body["handoffs"] == []
-
-
-def test_short_non_economic_message_is_not_sent_to_research_agents():
-    response = client.post("/api/chat", json={"question": "¿Qué tal?", "countries": ["IND"]}, headers=headers(True))
-    assert response.status_code == 200
-    assert response.json()["model"] is None
-
-
-def test_date_question_has_a_specific_direct_reply():
-    response = client.post("/api/chat", json={"question": "What is today's date?", "countries": ["IND"]}, headers=headers(True))
-    assert response.status_code == 200
-    assert response.json()["model"] is None
-    assert "Today is" in response.json()["answer"]
-
-
-def test_status_question_has_a_specific_direct_reply():
-    response = client.post("/api/chat", json={"question": "What's going on?", "countries": ["IND", "CHN"]}, headers=headers(True))
-    assert response.status_code == 200
-    assert "IND, CHN" in response.json()["answer"]
-
-
-def test_simple_gdp_question_uses_checked_structured_data():
-    response = client.post("/api/chat", json={"question": "What is India's GDP?", "countries": ["IND"], "mode": "live"}, headers=headers(True))
-    assert response.status_code == 200
-    body = response.json()
-    assert body["model"] is None
-    assert "current-dollar GDP" in body["answer"]
-    assert "$3.50 trillion" in body["answer"]
+    assert response.json()["model"] == "gpt-5-nano"
+    assert response.json()["answer"] == "India GDP result"
 
 
 def test_live_chat_is_disabled_by_default():

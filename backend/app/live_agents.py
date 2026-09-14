@@ -196,6 +196,37 @@ async def run_live(question: str, memory_context: str = "") -> tuple[str, str, d
     return str(result.final_output), model, usage, _estimated_cost(usage)
 
 
+async def run_casual_chat(question: str) -> tuple[str, str, dict, float | None]:
+    """Use one low-cost model turn for non-development conversation.
+
+    Casual chat deliberately has no tools, handoffs, report retrieval, or
+    conversation context. This keeps it brief and prevents incidental chatter
+    from spending tokens on the research workflow.
+    """
+
+    if not settings.openai_ready:
+        raise RuntimeError("OPENAI_API_KEY is unavailable")
+    if settings.per_run_budget_usd <= 0:
+        raise RuntimeError("A positive per-run budget is required")
+    try:
+        from agents import Agent, Runner
+    except ImportError as exc:
+        raise RuntimeError("OpenAI Agents SDK is not installed") from exc
+
+    agent = Agent(
+        name="Conversational guide",
+        instructions=(
+            "Reply naturally and helpfully to casual conversation in the user's language. "
+            "Use no tools. Keep the answer to one short sentence, at most 18 words. "
+            "If asked about this application, briefly direct the user to World Bank country comparisons and report evidence."
+        ),
+        model=settings.default_model,
+    )
+    result = await Runner.run(agent, question, max_turns=1)
+    usage = _usage_from(result)
+    return str(result.final_output), settings.default_model, usage, _estimated_cost(usage)
+
+
 def evaluation_agent_definition():
     """Create the judge only for an explicitly requested paid evaluation run."""
 

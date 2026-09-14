@@ -1,17 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime
 from uuid import uuid4
-from zoneinfo import ZoneInfo
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from .live_agents import run_live, sandbox_status
+from .live_agents import run_casual_chat, run_live, sandbox_status
 from .repository import ALLOWED_COUNTRIES, ALLOWED_INDICATORS, list_countries, list_indicators, series
 from .schemas import ChatRequest, ChatResponse, DataCleanRequest, DataRefreshRequest, SettingsPatch
 from .conversation_memory import clear, context_for, ensure_session, remember
-from .structured_answers import answer as structured_answer
 from .security import require_mutation_guard, require_owner, validate_prompt
 from .settings import settings
 from .state import runtime_state
@@ -21,55 +18,18 @@ app = FastAPI(title="Global Development Intelligence Agent", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=list(settings.allowed_origins), allow_credentials=True, allow_methods=["GET", "POST", "PATCH"], allow_headers=["*"])
 
 
-def _is_greeting(question: str) -> bool:
-    """Handle a simple greeting locally so it never requires a model run."""
-
-    text = question.strip().lower().strip("!,.? ")
-    return text in {
-        "hi", "hello", "hey", "hola", "bonjour", "hallo", "ciao", "ola", "olá",
-        "namaste", "नमस्ते", "नमस्कार", "你好", "您好", "こんにちは", "안녕하세요",
-        "مرحبا", "السلام عليكم", "привет",
-    }
-
-
-def _is_small_talk(question: str) -> bool:
-    """Avoid treating short non-economic messages in any language as research."""
+def _is_casual_chat(question: str) -> bool:
+    """Keep non-development conversation to a single low-cost model turn."""
 
     text = question.strip()
     data_terms = (
         "gdp", "growth", "inflation", "population", "economy", "economic", "indicator",
-        "world bank", "compare", "explain", "why", "evidence", "report", "research",
-        "india", "china", "vietnam", "indonesia", "united states", "united kingdom",
+        "world bank", "compare", "explain", "why", "evidence", "report", "research", "data", "development", "country", "countries",
+        "india", "china", "vietnam", "indonesia", "united states", "united kingdom", "usa", "uk", "germany", "japan", "france", "canada", "australia", "brazil", "mexico", "south africa", "nigeria", "bangladesh", "philippines",
+        "ind", "chn", "vnm", "idn", "gbr", "deu", "jpn", "fra", "can", "aus", "bra", "mex", "zaf", "nga", "bgd", "phl",
         "जीडीपी", "pib", "produit intérieur brut", "国内総生産", "国内生产总值", "국내총생산",
     )
-    return bool(text) and len(text.split()) <= 8 and not any(term in text.lower() for term in data_terms)
-
-
-def _direct_reply(question: str, countries: list[str]) -> str:
-    """Give useful, varied replies for non-research conversation without a model."""
-
-    text = question.strip().lower()
-    if any(word in text for word in ("date", "today", "time", "fecha", "तारीख", "日付", "日期")):
-        today = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%A, %d %B %Y")
-        return f"Today is {today} in India Standard Time."
-    if any(phrase in text for phrase in ("what's going on", "what is going on", "what is happening", "status", "what's up")):
-        selected = ", ".join(countries) if countries else "the selected countries"
-        return (
-            f"The dashboard is ready with World Bank data for {selected}. "
-            "Ask about GDP, GDP growth, or report evidence when you are ready."
-        )
-    if any(phrase in text for phrase in ("help", "what can you do", "what do you do")):
-        return "I can compare the selected countries, check GDP or growth figures, and research approved World Bank report evidence."
-    if any(phrase in text for phrase in ("how are you", "how's it going", "how is it going")):
-        return "I’m ready to help with the development data whenever you are."
-    return "Hello! I can compare the selected countries, explain GDP and growth, or retrieve evidence from the reviewed World Bank reports."
-
-
-def _is_simple_structured_question(question: str) -> bool:
-    """Keep short GDP fact checks deterministic, fast, and free."""
-
-    text = question.lower()
-    return "gdp" in text and len(text.split()) <= 10 and not any(word in text for word in ("why", "explain", "cause", "report", "evidence"))
+    return bool(text) and not any(term in text.lower() for term in data_terms)
 
 
 def _telemetry_call(operation, *args):
@@ -129,18 +89,13 @@ async def chat(request: ChatRequest, _: str = Depends(require_mutation_guard)):
     run_id = _telemetry_call(start_run, "chat", request.mode) or f"unrecorded-{uuid4()}"
     telemetry_available = not run_id.startswith("unrecorded-")
     try:
-        if _is_greeting(request.question) or _is_small_talk(request.question):
-            answer = _direct_reply(request.question, request.countries)
-            citations, limitations, handoffs = [], ["Direct conversation response; no data retrieval or model call was needed."], []
-            model = None
-            estimated_cost = None
-        elif _is_simple_structured_question(request.question):
-            answer, citations, limitations = structured_answer(request)
-            model = None
-            estimated_cost = None
-            handoffs = []
+        if _is_casual_chat(request.question):
+            if not runtime_state.chat_enabled:
+                raise HTTPException(503, "Live chat is disabled by the owner")
+            answer, model, usage, estimated_cost = await run_casual_chat(request.question)
             if telemetry_available:
-                _telemetry_call(log_tool_call, run_id, "structured_data_lookup", request.model_dump(), "completed")
+                _telemetry_call(log_model_call, run_id, "casual_chat", model, usage, estimated_cost)
+            citations, limitations, handoffs = [], ["Quick low-cost conversational response; no research tools or specialist handoffs were used."], []
         elif request.mode == "live":
             if not runtime_state.chat_enabled:
                 raise HTTPException(503, "Live chat is disabled by the owner")

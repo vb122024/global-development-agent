@@ -85,7 +85,7 @@ export async function askAgent(question) {
     return {
       status: "completed",
       answer: directResponse(question),
-      limitations: ["Direct conversation response; no data retrieval or model call was needed."],
+      limitations: ["Static demonstration response; no live model call was made."],
       handoffs: [],
     };
   }

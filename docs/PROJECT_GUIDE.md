@@ -6,8 +6,8 @@ This guide is the shortest map of the application for someone new to programming
 
 1. The JavaScript dashboard gathers selected countries, indicator, years, and the user's question.
 2. In static mode, the frontend answers from reviewed example data and makes no backend request.
-3. In local mode, short greetings and direct GDP facts are handled without a model. Research questions are routed to the Python service.
-4. The orchestrator hands research questions to narrow specialists that query `structured.duckdb` and the OpenAI managed vector store.
+3. In local mode, every submitted message reaches the configured live model. Casual conversation uses one low-cost model turn without tools.
+4. Development-data questions use the full workflow: the orchestrator hands work to narrow specialists that query `structured.duckdb` and the OpenAI managed vector store.
 5. OpenAI-managed file search retrieves passages from selected World Bank reports only after explicit indexing approval; query embedding happens inside that service.
 6. The synthesis agent produces a source-backed answer. Python validates numeric facts and citation identifiers.
 7. `telemetry.duckdb` records the run, agents, tools, models, tokens, cost estimate, latency, evaluation results, and redacted security events.
