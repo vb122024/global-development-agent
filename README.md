@@ -4,6 +4,10 @@ A mini experimental portfolio project that explores an agentic AI workflow for c
 
 ![Global Development Intelligence architecture](docs/images/global-development-architecture.png)
 
+## Application preview
+
+![Global Development Intelligence dashboard](docs/images/dashboard-preview.png)
+
 ## Explore the project
 
 | Topic | Start here |

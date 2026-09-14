@@ -8,7 +8,7 @@ config:
 architecture-beta
     %% Simple overview. Live AI runs locally; GitHub Pages uses static snapshots only.
     %% Managed vector stores handle chunking and embeddings during document ingestion.
-    %% Backend owns credentials and enforces the chat switch; no browser API keys.
+    %% The backend enforces the chat switch and keeps local runtime configuration separate.
     %% Evaluation, costs and sandbox details remain in the supporting architecture.
 
     group WB(cloud)[World Bank sources]

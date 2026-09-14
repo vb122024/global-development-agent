@@ -35,4 +35,4 @@ This guide is the shortest map of the application for someone new to programming
 
 ## What is public
 
-GitHub Pages receives only the built frontend and allowlisted static data. It does not receive the Python backend, real API keys, private telemetry, sessions, raw reports, or local artifacts. Publishing remains a separate owner action.
+GitHub Pages receives only the built frontend and allowlisted static data. It does not receive the Python backend, private telemetry, sessions, raw reports, or local artifacts. Publishing remains a separate owner action.
