@@ -2,31 +2,27 @@
 
 ## World Bank indicators
 
-The MVP uses the World Bank Indicators API for current-US-dollar GDP (`NY.GDP.MKTP.CD`), annual real GDP growth (`NY.GDP.MKTP.KD.ZG`), country metadata, and indicator definitions. The ingestion code records the request URL, retrieval timestamp, indicator definition, unit, year, and missing values.
+The dashboard uses World Bank indicator data for current-US-dollar GDP (`NY.GDP.MKTP.CD`) and annual real GDP growth (`NY.GDP.MKTP.KD.ZG`), along with country and indicator metadata.
 
-- API guidance: https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures
-- Country metadata: https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-country-api-queries
-- Indicator metadata: https://datahelpdesk.worldbank.org/knowledgebase/articles/898599-indicator-api-queries
+- [World Bank Indicators API](https://api.worldbank.org/v2/)
+- [World Development Indicators](https://databank.worldbank.org/source/world-development-indicators)
+- [World Bank data-access and licensing information](https://datacatalog.worldbank.org/public-licenses)
+
+Reuse must follow the applicable World Bank dataset terms. Attribute the World Bank, cite the data source and access date, and identify material changes.
 
 ## World Bank reports
 
-The MVP report catalog comes from the Documents & Reports API. Selected readable public reports provide the narrative evidence for document retrieval.
+The report catalogue in [`corpus/catalog.json`](corpus/catalog.json) records source URLs, citations and the licence stated for each reviewed report. The current catalogue contains:
 
-- API documentation: https://documents.worldbank.org/en/publication/documents-reports/api
+- *World Development Report 2024: The Middle-Income Trap — Overview* — CC BY 3.0 IGO.
+- *Poverty, Prosperity, and Planet Report 2024: Pathways Out of the Polycrisis — Overview* — CC BY 3.0 IGO.
 
-Report metadata and source URLs are public evidence. A public listing does not automatically permit every form of redistribution, so the project records document-specific terms and does not publish raw reports until reviewed.
+Report licences apply to the reports themselves. Check the individual work before reuse, keep its attribution and do not imply World Bank endorsement.
 
-The first two reviewed report PDFs, their precise citations and licenses, and
-the upload/indexing workflow are documented in [`corpus/README.md`](corpus/README.md).
+## India outline
 
-## India boundary
+The India outline used by the map is sourced from [Survey of India outline maps](https://surveyofindia.gov.in/pages/outline-maps-of-india). The source terms apply separately to that material. Retain attribution and review the current terms before reuse, redistribution or commercial use.
 
-Political maps of India use Survey of India published maps or digital boundary data as the standard. The project downloaded the official generalized 1:16 million outline vector from the Survey of India on 12 September 2026.
+## Project boundary
 
-- Official source page: https://surveyofindia.gov.in/pages/outline-maps-of-india
-- Government geospatial guidance: https://geospatial.dst.gov.in/Guidelines.aspx
-- Downloaded source archive: `frontend/public/maps/survey-of-india-outline.zip`
-
-Survey of India lists individual, internal, research, and website use among the permitted purposes for its outline vector, and prohibits commercial use. This portfolio must retain Survey of India attribution and must not be represented as a commercially reusable map asset. Before any commercial use or redistribution outside this project, the owner must review the current terms directly with Survey of India.
-
-The rest of the world geometry is a separate map source. Rendering code must overlay the official Survey of India geometry for India rather than relying on the India outline in a generic world dataset.
+The code is MIT-licensed. Third-party data, reports and map materials remain subject to their own terms; see [`NOTICE.md`](../NOTICE.md).

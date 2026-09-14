@@ -18,6 +18,18 @@ app = FastAPI(title="Global Development Intelligence Agent", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=list(settings.allowed_origins), allow_credentials=True, allow_methods=["GET", "POST", "PATCH"], allow_headers=["*"])
 
 
+@app.get("/")
+def api_home():
+    """Make the local API endpoint self-explanatory when opened in a browser."""
+
+    return {
+        "service": "Global Development Intelligence API",
+        "dashboard": "http://127.0.0.1:4173/",
+        "evaluation_lab": "http://127.0.0.1:4175/",
+        "health": "/health",
+    }
+
+
 def _is_casual_chat(question: str) -> bool:
     """Keep non-development conversation to a single low-cost model turn."""
 

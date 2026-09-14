@@ -81,10 +81,6 @@ export function MapPanel({ selected }) {
         </ComposableMap>
       </div>
       <p>Selected countries are highlighted.</p>
-      <small className="boundary-note">
-        India outline: Survey of India. Other boundaries are illustrative and do
-        not imply official endorsement.
-      </small>
     </article>
   );
 }

@@ -315,15 +315,6 @@ td {
 .map-card p {
   font-size: 10px;
 }
-.boundary-note {
-  display: block;
-  color: #7d5a24;
-  background: #fff8e9;
-  border-radius: 4px;
-  padding: 5px 7px;
-  margin-top: 6px;
-  line-height: 1.35;
-}
 .questions {
   padding: 12px;
 }

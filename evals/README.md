@@ -7,5 +7,4 @@ backend/.venv/bin/python evals/run_checks.py
 ```
 
 The checks cover factual values, citations, limitations, prompt-injection
-handling, and unsupported causal language. Live model-judge evaluations require
-an explicitly configured budget.
+handling and unsupported causal language.
