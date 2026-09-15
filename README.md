@@ -13,6 +13,9 @@ A mini experimental portfolio project that explores an agentic AI workflow for c
 | Topic | Start here |
 | --- | --- |
 | Architecture | [`docs/flowarchitecture.mmd`](docs/flowarchitecture.mmd) |
+| Business requirements | [`docs/BRD.md`](docs/BRD.md) |
+| Product requirements | [`docs/PRD.md`](docs/PRD.md) |
+| Technical design | [`docs/TDD.md`](docs/TDD.md) |
 | Product workflow and code map | [`docs/WORKFLOW_WALKTHROUGH.md`](docs/WORKFLOW_WALKTHROUGH.md) |
 | Beginner-friendly project guide | [`docs/PROJECT_GUIDE.md`](docs/PROJECT_GUIDE.md) |
 | Data sources and attribution | [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) and [`NOTICE.md`](NOTICE.md) |
